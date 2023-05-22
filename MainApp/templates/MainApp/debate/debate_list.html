@@ -1,0 +1,12 @@
+{% extends "MainApp/base.html" %}
+{% block content %}
+<h1>Debate list</h1>
+<div id="debate_list">
+{% for debate in debate_list %}
+    <a href="{% url 'MainApp:debate-details' debate.pk %}">{{ debate.title }}</a>
+    </br>
+    </br>
+    {{ debate.description }}
+{% endfor %}
+</div>
+{% endblock %}

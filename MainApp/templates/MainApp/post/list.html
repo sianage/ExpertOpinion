@@ -1,0 +1,24 @@
+{% extends "MainApp/base.html" %}
+{% block title %}my blog{% endblock %}
+{% block content %}
+    <h1>Blog entries</h1>
+    <div id="post_list">
+
+    {% for post in posts %}
+        <a href="{{ post.get_absolute_url }}">
+        <h2 id="post_title">
+                {{ post.title }}
+        </h2>
+        <div id="post_info">
+        <p class="date">
+            Published {{ post.publish }} by {{ post.author }}
+        </p>
+        </div>
+        <div id="post_body">
+            {{ post.body }}
+        </div>
+        </a>
+    {% endfor %}
+    </div>
+{% include "pagination.html" with page=posts %}
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "MainApp/base.html" %}
+{% block title %}blog entry{% endblock %}
+
+{% block content %}
+<div id="post_body">
+<h1>{{ post.title }}</h1>
+<p class="date">
+    Published {{ post.publish }} by {{ post.author }}
+</p>
+{{ post.body }}
+</div>
+{% endblock %}
