@@ -8,6 +8,19 @@ class PublishedManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(status=Post.Status.PUBLISHED)
 
+class Category(models.Model):
+    category = models.CharField(max_length=255)
+
+    class Meta:
+        verbose_name_plural = "Categories"
+
+    def __str__(self):
+        return self.category
+
+    #may need get_absolute_url function
+    def get_absolute_url(self):
+        return reverse('post_list', args=(str(self.id)))
+
 class Post(models.Model):
 
     #Save posts as draft until ready to publish
@@ -25,6 +38,7 @@ class Post(models.Model):
     #auto_now automatically updates the date when saving
     updated = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=2, choices=Status.choices, default=Status.DRAFT)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="posts")
 
     #default manager
     objects = models.Manager()
@@ -45,17 +59,6 @@ class Post(models.Model):
                                                     self.publish.month,
                                                     self.publish.day,
                                                     self.slug])
-
-class Category(models.Model):
-    category = models.CharField(max_length=255)
-
-    class Meta:
-        verbose_name_plural = "Categories"
-
-    def __str__(self):
-        return self.category
-
-    #may need get_absolute_url function
 
 class Debate(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="debates")
