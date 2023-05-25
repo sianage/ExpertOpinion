@@ -1,8 +1,10 @@
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView
 from django.shortcuts import render
+from .forms import PostForm
 from django.shortcuts import render, get_object_or_404
 from django.template import loader
+from django.http import HttpResponse
 from django.http import Http404
 from django.http import HttpResponse
 # Create your views here.
@@ -20,6 +22,8 @@ from django.views.decorators.http import require_POST
     ordering = ['-id']'''
 
 def post_list(request):
+    requested_url = request.path
+    print("URL is......",requested_url)
     post_list = Post.published.all()
     paginator = Paginator(post_list,10)
     page_number = request.GET.get('page', 1)
@@ -31,7 +35,12 @@ def post_list(request):
     except EmptyPage:
         #If page_number out of range, display last page of results
         posts = paginator.page(paginator.num_pages)
-    return render(request, 'MainApp/post/list.html', {'posts': posts})
+    if requested_url == "/MainApp/philosophy/":
+        return render(request, 'MainApp/post/philosophy_blog.html', {'posts': posts})
+    elif requested_url == "/MainApp/economics/":
+        return render(request, 'MainApp/post/economics.html', {'posts': posts})
+    else:
+        return render(request, 'MainApp/post/list.html', {'posts': posts})
 
 def post_detail(request, year, month, day, post):
     post = get_object_or_404(Post, status=Post.Status.PUBLISHED,
@@ -59,3 +68,13 @@ class debate_list(ListView):
 class debate_detail(DetailView):
     model = Debate
     template_name = 'MainApp/debate/debate_detail.html'
+
+class philosophy_blog(ListView):
+    model = Post
+    template_name = 'MainApp/post/philosophy_blog.html'
+
+class AddBlogView(CreateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'add+blog_entry.html'
+    success_url = reverse_lazy('econ_blog')

@@ -2,13 +2,14 @@
 {% block content %}
 <h1>Debate list</h1>
 <div id="debate_list">
-{% for debate in debate_list %}
-
-    <a href="{% url 'MainApp:debate-details' debate.pk %}">{{ debate.title }}</a>
-    </br>
-    </br>
-    {{ debate.description }}
-
-{% endfor %}
+    {% for debate in debate_list %}
+        {% if debate.category.category == "Philosophy" %}
+            <h3>Category: {{ debate.category.category }}</h3>
+            <a href="{% url 'MainApp:debate-details' debate.pk %}">{{ debate.title }}</a>
+            </br>
+            </br>
+            {{ debate.description }}
+        {% endif %}
+    {% endfor %}
 </div>
 {% endblock %}
