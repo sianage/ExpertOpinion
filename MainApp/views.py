@@ -11,7 +11,7 @@ from django.http import HttpResponse
 from MainApp.models import Post, Category
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Post, Debate, Category, Comment
+from .models import Post, Debate, Category, Comment, User
 from .forms import CommentForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.decorators.http import require_POST
@@ -75,6 +75,7 @@ class philosophy_blog(ListView):
 
 class AddBlogView(CreateView):
     model = Post
-    form_class = PostForm
-    template_name = 'add+blog_entry.html'
-    success_url = reverse_lazy('econ_blog')
+    #form_class = PostForm
+    template_name = 'MainApp/post/add_post.html'
+    fields = '__all__'
+    #success_url = reverse_lazy('MainApp:philosophy_blog_list')
