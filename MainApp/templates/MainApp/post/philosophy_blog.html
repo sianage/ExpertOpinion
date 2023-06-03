@@ -6,9 +6,14 @@
     <div id="post_list">
         {% for post in posts %}
             {% if post.category.category == "Philosophy" %}
-
+                {% if user.is_authenticated %}
+                    {% if user.id == post.author.id %}
+                        <a href="{% url 'MainApp:update_post' post.pk %}">Edit</a>
+                        <a href="{% url 'MainApp:delete_post' post.pk %}">Delete</a>
+                    {% endif %}
+                {% endif %}
             <h1>{{ post.category }}</h1>
-                <a href="{{ post.get_absolute_url }}">
+                <a href="{% url 'MainApp:post_detail' post.pk %}">
 
                 <h2 id="post_title">
                         {{ post.title }}

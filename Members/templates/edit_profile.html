@@ -1,0 +1,14 @@
+{% extends 'MainApp/base.html' %}
+{% block content %}
+<h1>edit profile</h1>
+
+<div class="form-group">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn btn-secondary">edit profile</button>
+    </form>
+</div>
+<h1>{{ user.name }}</h1>
+<h3>{{ user.profile.bio }}</h3>
+{% endblock %}

@@ -58,7 +58,7 @@
              <div class="dropdown">
                <button class="dropbtn">Philosophy <i class="fa fa-caret-down"></i></button>
                <div class="dropdown-content">
-                <a href="#">Article Summaries</a>
+                <a href="#">Profile</a>
                 <a href="{% url 'MainApp:philosophy_blog_list' %}">Blogs</a>
                 <a href="{% url 'MainApp:debate_list' %}">Debates</a>
                 <a href="#">Polls</a>
@@ -73,9 +73,10 @@
              <div class="dropdown">
                <button class="dropbtn">Account <i class="fa fa-caret-down"></i></button>
                <div class="dropdown-content">
-                <a href="#">Edit Profile</a>
+                <a href="{% url 'edit_profile' %}">Edit Profile</a>
                 <a href="{% url 'logout' %}">Logout</a>
-                <a href="#">Write Blog</a>
+                <a href="{% url 'MainApp:add_post' %}">Write Blog</a>
+                <a href="{% url 'profile_page' user.profile.id %}">Profile</a>
                </div>
              </div>
           </li>

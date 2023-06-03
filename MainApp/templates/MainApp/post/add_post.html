@@ -2,8 +2,8 @@
 {% block title %}add post{% endblock %}
 
 {% block content %}
-
-<form method="post">
+<h1>Add post brooooooh</h1>
+<form method="post", enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
     <button>Post</button>

@@ -1,4 +1,5 @@
 from django.urls import reverse_lazy
+from django.views import generic
 from django.views.generic import ListView, DetailView
 from django.shortcuts import render
 from .forms import PostForm
@@ -7,10 +8,12 @@ from django.template import loader
 from django.http import HttpResponse
 from django.http import Http404
 from django.http import HttpResponse
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.views import PasswordChangeView
 # Create your views here.
-from MainApp.models import Post, Category
+from MainApp.models import Post, Category, Profile
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, CreateView
 from .models import Post, Debate, Category, Comment, User
 from .forms import CommentForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -42,11 +45,10 @@ def post_list(request):
     else:
         return render(request, 'MainApp/post/list.html', {'posts': posts})
 
-def post_detail(request, year, month, day, post):
-    post = get_object_or_404(Post, status=Post.Status.PUBLISHED,
-                             slug=post, publish__year=year, publish__month=month, publish__day=day)
-
-    return render(request, 'MainApp/post/detail.html', {'post': post})
+class post_detail(DetailView, ):
+    model = Post
+    template_name = 'MainApp/post/detail.html'
+    success_url = reverse_lazy('post_detail')
 
 @require_POST
 def debate_post(request, debate_id):
@@ -79,3 +81,15 @@ class AddBlogView(CreateView):
     template_name = 'MainApp/post/add_post.html'
     fields = '__all__'
     #success_url = reverse_lazy('MainApp:philosophy_blog_list')
+    success_url = reverse_lazy('MainApp/post/list.html')
+
+class UpdateBlogView(UpdateView):
+    model = Post
+    template_name = 'MainApp/post/update_blog.html'
+    fields = ['title', 'body']
+
+class DeleteBlogView(DeleteView):
+    model = Post
+    template_name = 'MainApp/post/delete_blog.html'
+    success_url = reverse_lazy('MainApp:philosophy_blog_list')
+
