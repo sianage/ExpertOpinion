@@ -3,13 +3,17 @@
 {% block content %}
     <h1>Blog entries</h1>
 
-    <div id="post_list">
+
         {% for post in posts %}
             {% if post.category.category == "Philosophy" %}
+            <div id="post_list">
                 {% if user.is_authenticated %}
                     {% if user.id == post.author.id %}
-                        <a href="{% url 'MainApp:update_post' post.pk %}">Edit</a>
-                        <a href="{% url 'MainApp:delete_post' post.pk %}">Delete</a>
+                        <div id="edit-delete">
+                            <a href="{% url 'MainApp:update_post' post.pk %}">Edit</a>
+                            <a href="{% url 'MainApp:delete_post' post.pk %}">Delete</a>
+                        </div>
+
                     {% endif %}
                 {% endif %}
             <h1>{{ post.category }}</h1>
@@ -27,9 +31,12 @@
                     {{ post.body }}
                 </div>
                 </a>
+                </div>
+                </br>
             {% endif %}
+
         {% endfor %}
 
-    </div>
+
 {% include "pagination.html" with page=posts %}
 {% endblock %}

@@ -24,11 +24,11 @@ from django.views.decorators.http import require_POST
     template_name = 'home.html'
     ordering = ['-id']'''
 
-def post_list(request):
+def home(request):
     requested_url = request.path
     print("URL is......",requested_url)
-    post_list = Post.published.all()
-    paginator = Paginator(post_list,10)
+    home = Post.published.all()
+    paginator = Paginator(home,2)
     page_number = request.GET.get('page', 1)
     try:
         posts = paginator.page(page_number)
@@ -81,7 +81,7 @@ class AddBlogView(CreateView):
     template_name = 'MainApp/post/add_post.html'
     fields = '__all__'
     #success_url = reverse_lazy('MainApp:philosophy_blog_list')
-    success_url = reverse_lazy('MainApp/post/list.html')
+    success_url = reverse_lazy('MainApp:philosophy_blog_list')
 
 class UpdateBlogView(UpdateView):
     model = Post

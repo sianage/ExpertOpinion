@@ -20,7 +20,7 @@ class Category(models.Model):
 
     #may need get_absolute_url function
     def get_absolute_url(self):
-        return reverse('post_list', args=(str(self.id)))
+        return reverse('home', args=(str(self.id)))
 
 class Post(models.Model):
 
