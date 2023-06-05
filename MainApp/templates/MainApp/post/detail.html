@@ -3,14 +3,21 @@
 {% block title %}blog entry{% endblock %}
 
 {% block content %}
-<div id="post_body">
-<h1>{{ post.title }}</h1>
-<p class="date">
-    Published {{ post.publish }} by {{ post.author }}
-</p>
-{{ post.body }}
+
+<div id="blog_box">
+
+    <div id="profile_body">
+        <div id="profile_picture">
+  <img src="{{ post.author.profile.profile_picture.url }}" width="200" height="200">
 </div>
-{% if user.is_authenticated %}
+
+
+</div>
+
+    <div id="post_body">
+
+                    </br>
+        {% if user.is_authenticated %}
 {% if user.id == post.author.id %}
 <a href="{% url 'MainApp:update_post' post.pk %}">Edit</a>
 <a href="{% url 'MainApp:delete_post' post.pk %}">Delete</a>
@@ -19,23 +26,16 @@
 {% endif %}
 {% endif %}
 <br/><br/>
-<div class="card mb-3" style="max-width: 540px;" id="profile_card">
-  <div class="row g-0">
-    <div class="col-md-2">
-      <img src="{{ post.author.profile.profile_picture.url }}" class="card-img">
-    </div>
-    <div class="col-md-4">
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-        <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
-      </div>
-    </div>
-  </div>
-</div>
-<h1>Biography: {{ post.author.profile.bio }}</h1>
-<div id="profile_picture">
-  <img src="{{ post.author.profile.profile_picture.url }}" width="200" height="200">
+
+        <h1>{{ post.title }}</h1>
+        <p class="date">
+        Published {{ post.publish }} by <a href="{% url 'profile_page' post.author.profile.id %}">{{ post.author }}</a>
+    </p>
+    {{ post.body|ljust:10|striptags|safe|linebreaksbr }}
 </div>
 
+
+</div>
+
+</div>
 {% endblock %}

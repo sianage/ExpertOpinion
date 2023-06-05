@@ -34,7 +34,7 @@ class Post(models.Model):
     #related_name allows us to access related objects from a user object, like user.blog_posts
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_posts')
     slug = models.SlugField(max_length=255, unique_for_date='publish')
-    body = models.TextField()
+    body = RichTextField(blank=True, null=True)
     publish = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
     #auto_now automatically updates the date when saving
@@ -78,7 +78,7 @@ class Comment(models.Model):
     updated = models.DateTimeField(auto_now=True)
     commenter_name = models.ForeignKey(User, on_delete=models.CASCADE)
     #form.media in view (tut 21)
-    body = models.TextField()
+    body = RichTextField(blank=True, null=True)
 
     class Meta:
         ordering = ['created']

@@ -5,8 +5,18 @@ body{
   font-family: arial;
 }
 #post_body{
-    text-align: center;
+    text-align: left;
     color:black;
+    width: 70%;
+    float: right;
+    margin-right: 10px;
+    padding: 10px;
+}
+#profile_body{
+    border: solid 2px;
+    float: left;
+    width: 20%;
+    margin-left: 10px;
 }
 #comments{
     text-align: center;
@@ -18,7 +28,10 @@ body{
 #profile_picture{
     height: 200;
     width: 200;
+    display: flex;
+    justify-content: center;
 }
+
 #profile_card{
     background-color: white;
 }
