@@ -6,31 +6,28 @@
 
 <div id="blog_box">
 
-    <div id="profile_body">
-        <div id="profile_picture">
-  <img src="{{ post.author.profile.profile_picture.url }}" width="200" height="200">
-</div>
 
-
-</div>
 
     <div id="post_body">
 
                     </br>
         {% if user.is_authenticated %}
 {% if user.id == post.author.id %}
-<a href="{% url 'MainApp:update_post' post.pk %}">Edit</a>
-<a href="{% url 'MainApp:delete_post' post.pk %}">Delete</a>
+<div id="edit_delete">
+<a href="{% url 'MainApp:update_post' post.pk %}"><strong><h2>Edit</h2></strong></a>
+        <a href="{% url 'MainApp:delete_post' post.pk %}"><strong><h2>Delete</h2></strong></a>
+</div>
 {% else %}
 <h1>You are not authorized to edit/delete this post!</h1>
 {% endif %}
 {% endif %}
-<br/><br/>
+<br/>
 
         <h1>{{ post.title }}</h1>
         <p class="date">
-        Published {{ post.publish }} by <a href="{% url 'profile_page' post.author.profile.id %}">{{ post.author }}</a>
+        Published {{ post.publish }} by <a href="{% url 'profile_page' post.author.profile.id %}">{{ post.author.first_name }} {{ post.author.last_name}}</a>
     </p>
+        </br>
     {{ post.body|ljust:10|striptags|safe|linebreaksbr }}
 </div>
 
