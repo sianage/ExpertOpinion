@@ -22,4 +22,5 @@ urlpatterns = [
     path('add_post/', AddBlogView.as_view(), name="add_post"),
     path('blog_post/edit/<int:pk>', UpdateBlogView.as_view(), name='update_post'),
     path('blog_post/delete/<int:pk>', DeleteBlogView.as_view(), name='delete_post'),
+    path('profile_list/', views.profile_list, name='profile_list'),
 ]

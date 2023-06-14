@@ -73,10 +73,17 @@
              <div class="dropdown">
                <button class="dropbtn">Account <i class="fa fa-caret-down"></i></button>
                <div class="dropdown-content">
-                <a href="{% url 'edit_profile' %}">Edit Profile</a>
+                   {% if user.profile.id %}
+                    <a href="{% url 'edit_profile' %}">Edit Settings</a>
+                    <a href="{% url 'profile_page' user.profile.id %}">Profile</a>
+                    <a href="{% url 'edit_profile_page' user.profile.id %}">edit profile</a>
+                   {% else %}
+                    <a href="{% url 'create_profile_page' %}">Create Profile</a>
+                   {% endif %}
                 <a href="{% url 'logout' %}">Logout</a>
                 <a href="{% url 'MainApp:add_post' %}">Write Blog</a>
-                <a href="{% url 'profile_page' user.profile.id %}">Profile</a>
+
+
                </div>
              </div>
           </li>

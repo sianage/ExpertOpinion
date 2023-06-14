@@ -1,9 +1,11 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.dispatch import receiver
 from django.utils import timezone
 from django.urls import reverse
 from ckeditor.fields import RichTextField
+from django.db.models.signals import post_save
 
 class PublishedManager(models.Manager):
     def get_queryset(self):
@@ -97,13 +99,18 @@ class Profile(models.Model):
               (field3, "Medicine"), (field4, "Political Science"),)
 
     user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
+    follows = models.ManyToManyField("self",
+                                     related_name="followed_by",
+                                     symmetrical=False,
+                                     blank=True)
     field = models.CharField(max_length=30, choices=fields, default="No Field Selected")
     bio = models.TextField(default='')
     profile_picture = models.ImageField(null=True, blank=True, upload_to="images/profile/")
     github_url = models.CharField(max_length=255, null=True, blank=True)
     linkedin_url = models.CharField(max_length=255, null=True, blank=True)
     def __str__(self):
-        return f"Academic field of user: {self.field}"
+        return f"{self.user.username}"
 
     def get_absolute_url(self):
-        return reverse('MainApp:profile_view', args=[self.user.primary_key])
+        return reverse('MainApp:home')
+

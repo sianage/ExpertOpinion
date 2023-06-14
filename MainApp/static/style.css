@@ -13,19 +13,37 @@ body{
 }
 
 #comments{
-    text-align: center;
+    text-align: left;
+    margin-left: 20px;
+    margin-right: 20px;
+    padding:20px;
+
 }
 #debate_list{
-    color:white;
+    color:black;
     text-align:center;
+    border: solid 2px;
+    background-color: white;
+    border-style: groove;
+    block-size: auto;
+    padding: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+    box-shadow: 10px 10px 100px grey inset;
+}
+#debate_list:hover{
+    background-color: #d9d9d9;
 }
 #profile_picture{
     height: 200;
     width: 200;
-    display: flex;
-    justify-content: center;
 }
-
+.center{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+}
 #profile_card{
     background-color: white;
 }
@@ -62,11 +80,31 @@ body{
     background-color: white;
     border: none;
 }
+#profile_pic{
+    height: 200;
+    width: 200;
+}
+#academic_field{
+    text-align: center;
+}
 #page_num_of{
     color: black;
     padding-bottom: 20px;
     font-weight: bold;
     text-align: center;
+}
+#user_profile{
+    text-align: left;
+    margin: auto;
+    color:black;
+    width: 60%;
+    float: center;
+    padding-bottom: 20px;
+    border: solid 2px;
+    margin-top: 5px;
+    background-color: #e4e9f2;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 p{
     color: black;

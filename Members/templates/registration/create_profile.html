@@ -1,12 +1,14 @@
 {% extends "MainApp/base.html" %}
-{% block title %}add post{% endblock %}
-
 {% block content %}
-<h1>edit profile</h1>
+
+
+{% if user.is_authenticated %}
+<h1>create profile</h1>
 <form method="post", enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.media }}
     {{ form.as_p }}
-    <button>update</button>
+    <button>update profile</button>
 </form>
+{% endif %}
 {% endblock %}

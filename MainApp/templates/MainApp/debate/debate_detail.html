@@ -1,10 +1,12 @@
 {% extends "MainApp/base.html" %}
 {% block content %}
-<h1>Debate broh</h1>
-<h2>{{debate.title}}</h2>
-<h3>{{ debate.desctiption }}</h3>
+
+
+<h1>{{debate.title}}</h1>
+
+<h3>{{ debate.description }}</h3>
 {% for comment in debate.comments.all %}
-<div style="background-color:{% cycle '#b86661' '#61b870' %}" id="comments">
+<div style="background-color:{% cycle '#dbbdbd' '#bddbc1' %}" id="comments">
 {{ comment.body }}
 </br>
 </div>

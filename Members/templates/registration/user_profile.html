@@ -3,7 +3,42 @@
 {% block title %}blog entry{% endblock %}
 
 {% block content %}
-<h1>user profile</h1>
-{{ profile.bio }}
-{{ page_user }}
+<div id="user_profile">
+
+    <h1>{{ profile.user.first_name }} {{profile.user.last_name }}</h1>
+    <div id="academic_field">
+        <strong>{{ page_user }}</strong>
+    </div>
+
+    </br></br>
+    {{ profile.bio|ljust:10|striptags|safe|linebreaksbr }}
+    </br>
+    <h1><strong>Links</strong></h1>
+    </br>
+    Github: <a href="{{ profile.user.github_url }}">https://github.com/sianage</a>
+    </br>
+    LinkedIn: <a href="{{ profile.user.linkedin_url }}">https://www.linkedin.com/in/richard-sia-b4259024a/</a>
+
+    <h3>Follows</h3>
+    {% for following in profile.follows.all %}
+        <a href="{% url 'profile_page' following.user.profile.id %}">@{{ following }}</a><br>
+    {% endfor %}
+    <br>
+    <h3>Followed by</h3>
+    {% for following in profile.followed_by.all %}
+        <a href="{% url 'profile_page' following.user.profile.id %}">@{{ following }}</a><br>
+    {% endfor %}
+
+    <form method="post">
+        {% csrf_token %}
+        {% if profile in user.profile.follows.all %}
+        <button class="btn" name="follow" value="unfollow"
+                type="submit">Unfollow {{ profile.user.username }}</button>
+        {% else %}
+                <button class="btn" name="follow" value="follow"
+                type="submit">Follow {{ profile.user.username }}</button>
+        {% endif %}
+    </form>
+</div>
+
 {% endblock %}

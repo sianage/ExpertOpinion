@@ -93,3 +93,6 @@ class DeleteBlogView(DeleteView):
     template_name = 'MainApp/post/delete_blog.html'
     success_url = reverse_lazy('MainApp:philosophy_blog_list')
 
+def profile_list(request):
+    profiles = Profile.objects.exclude(user=request.user)
+    return render(request, 'MainApp/post/profile_list.html', {'profiles':profiles})

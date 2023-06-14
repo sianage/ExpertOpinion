@@ -1,7 +1,7 @@
 from .models import Post, Category, User
 from .models import Debate
 from django import forms
-
+from MainApp.models import Profile
 # hard-coded version of selection list of categories (not used)
 # choices = [('economics', 'economics'), ('philosophy', 'philosophy'), ('medicine', 'medicine'), ('politics', 'politics')]
 choices = Category.objects.all().values_list('category', 'category')
