@@ -14,7 +14,7 @@ from django.contrib.auth.views import PasswordChangeView
 from MainApp.models import Post, Category, Profile
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, CreateView
-from .models import Post, Debate, Category, Comment, User
+from .models import Post, Debate, Category, Comment, User, Note
 from .forms import CommentForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.decorators.http import require_POST
@@ -24,12 +24,15 @@ from django.views.decorators.http import require_POST
     template_name = 'home.html'
     ordering = ['-id']'''
 
+
 def home(request):
     requested_url = request.path
     print("URL is......",requested_url)
     home = Post.published.all()
+    notes = Note.objects.all().order_by("-created_at")
     paginator = Paginator(home,2)
     page_number = request.GET.get('page', 1)
+    notes = Note.objects.all()
     try:
         posts = paginator.page(page_number)
     except PageNotAnInteger:
@@ -43,7 +46,7 @@ def home(request):
     elif requested_url == "/MainApp/economics/":
         return render(request, 'MainApp/post/economics.html', {'posts': posts})
     else:
-        return render(request, 'MainApp/post/list.html', {'posts': posts})
+        return render(request, 'MainApp/post/list.html', {'notes': notes})
 
 class post_detail(DetailView, ):
     model = Post

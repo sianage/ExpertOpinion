@@ -8,7 +8,7 @@ from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView, CreateView
 
 
-from MainApp.models import Profile
+from MainApp.models import Profile, Note
 from django import forms
 from MainApp.models import Profile
 from .forms import SignUpForm, ProfilePageForm
@@ -116,6 +116,7 @@ def ProfileView(request, pk):
         'cat_menu': cat_menu,
         'page_user': profile
     }'''
+
 
 
     if request.user.is_authenticated:
