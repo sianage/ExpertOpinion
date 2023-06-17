@@ -29,6 +29,8 @@
         <a href="{% url 'profile_page' following.user.profile.id %}">@{{ following }}</a><br>
     {% endfor %}
 
+
+
     <form method="post">
         {% csrf_token %}
         {% if profile in user.profile.follows.all %}

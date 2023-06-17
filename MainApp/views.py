@@ -27,12 +27,16 @@ from django.views.decorators.http import require_POST
 
 def home(request):
     requested_url = request.path
+    followed_profiles = request.user.profile.follows.all()
+    print("FOLLOWING: ",followed_profiles)
+    current_user = request.user
     print("URL is......",requested_url)
     home = Post.published.all()
-    notes = Note.objects.all().order_by("-created_at")
+    notes = Note.objects.filter(profile__in=followed_profiles)
+    #notes = Note.objects.all().order_by("-created_at")
     paginator = Paginator(home,2)
     page_number = request.GET.get('page', 1)
-    notes = Note.objects.all()
+    #notes = Note.objects.all()
     try:
         posts = paginator.page(page_number)
     except PageNotAnInteger:

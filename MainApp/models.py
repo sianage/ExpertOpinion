@@ -6,15 +6,6 @@ from django.utils import timezone
 from django.urls import reverse
 from ckeditor.fields import RichTextField
 from django.db.models.signals import post_save
-class Note(models.Model):
-    user = models.ForeignKey(User, related_name="Notes", on_delete=models.DO_NOTHING)
-    body = RichTextField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return(f"{self.user} \n"
-               f" {self.body}\n"
-               f"(Note made {self.created_at:%Y-%m-%d %H:%M})")
 
 class PublishedManager(models.Manager):
     def get_queryset(self):
@@ -107,6 +98,7 @@ class Profile(models.Model):
     fields = ((field1, 'Philosophy'), (field2, "Economics"),
               (field3, "Medicine"), (field4, "Political Science"),)
 
+
     user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     follows = models.ManyToManyField("self",
                                      related_name="followed_by",
@@ -123,3 +115,13 @@ class Profile(models.Model):
     def get_absolute_url(self):
         return reverse('MainApp:home')
 
+class Note(models.Model):
+    user = models.ForeignKey(User, related_name="Notes", on_delete=models.DO_NOTHING)
+    body = RichTextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    profile = models.ForeignKey(Profile, related_name="Notes", on_delete=models.DO_NOTHING, null=True)
+
+    def __str__(self):
+        return(f"{self.user} \n"
+               f" {self.body}\n"
+               f"(Note made {self.created_at:%Y-%m-%d %H:%M})")
