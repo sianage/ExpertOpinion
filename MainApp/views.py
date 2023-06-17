@@ -27,30 +27,33 @@ from django.views.decorators.http import require_POST
 
 def home(request):
     requested_url = request.path
-    followed_profiles = request.user.profile.follows.all()
-    print("FOLLOWING: ",followed_profiles)
-    current_user = request.user
-    print("URL is......",requested_url)
-    home = Post.published.all()
-    notes = Note.objects.filter(profile__in=followed_profiles)
-    #notes = Note.objects.all().order_by("-created_at")
-    paginator = Paginator(home,2)
-    page_number = request.GET.get('page', 1)
-    #notes = Note.objects.all()
-    try:
-        posts = paginator.page(page_number)
-    except PageNotAnInteger:
-        # if page_number not an int, display first page
-        posts = paginator.page(1)
-    except EmptyPage:
-        #If page_number out of range, display last page of results
-        posts = paginator.page(paginator.num_pages)
-    if requested_url == "/MainApp/philosophy/":
-        return render(request, 'MainApp/post/philosophy_blog.html', {'posts': posts})
-    elif requested_url == "/MainApp/economics/":
-        return render(request, 'MainApp/post/economics.html', {'posts': posts})
+    if request.user.is_authenticated:
+        followed_profiles = request.user.profile.follows.all()
+        print("FOLLOWING: ",followed_profiles)
+        current_user = request.user
+        print("URL is......",requested_url)
+        home = Post.published.all()
+        notes = Note.objects.filter(profile__in=followed_profiles)
+        #notes = Note.objects.all().order_by("-created_at")
+        paginator = Paginator(home,2)
+        page_number = request.GET.get('page', 1)
+        #notes = Note.objects.all()
+        try:
+            posts = paginator.page(page_number)
+        except PageNotAnInteger:
+            # if page_number not an int, display first page
+            posts = paginator.page(1)
+        except EmptyPage:
+            #If page_number out of range, display last page of results
+            posts = paginator.page(paginator.num_pages)
+        if requested_url == "/MainApp/philosophy/":
+            return render(request, 'MainApp/post/philosophy_blog.html', {'posts': posts})
+        elif requested_url == "/MainApp/economics/":
+            return render(request, 'MainApp/post/economics.html', {'posts': posts})
+        else:
+            return render(request, 'MainApp/post/list.html', {'notes': notes})
     else:
-        return render(request, 'MainApp/post/list.html', {'notes': notes})
+        return render(request, 'MainApp/post/list.html')
 
 class post_detail(DetailView, ):
     model = Post

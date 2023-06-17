@@ -1,11 +1,12 @@
 {% extends "MainApp/base.html" %}
 {% block content %}
 <h1>homepage</h1>
-
+{% if user.is_authenticated %}
 {% for note in notes %}
 note: {{note.body}}
 <br>
 {% endfor %}
+{% endif %}
 
 
 {% endblock %}
