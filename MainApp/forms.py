@@ -1,4 +1,6 @@
-from .models import Post, Category, User
+from django.forms import TextInput, CharField
+
+from .models import Post, Category, User, Note
 from .models import Debate
 from django import forms
 from MainApp.models import Profile
@@ -30,3 +32,15 @@ class PostForm(forms.ModelForm):
             'body': forms.Textarea(attrs={'class': 'form-control'}),
             'category': forms.Select(choices=choice_list, attrs={'class': 'form-control'}),
         }
+
+class NoteForm(forms.ModelForm):
+    body = forms.CharField(required=True,
+                           widget=forms.widgets.Textarea(attrs={
+                               "placeholder":"Enter Note",
+                               "class":"form-control"
+                           }),
+                           label="",)
+
+    class Meta:
+        model = Note
+        exclude = ("profile","user")

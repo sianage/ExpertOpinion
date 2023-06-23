@@ -3,6 +3,8 @@
 {% block title %}blog entry{% endblock %}
 
 {% block content %}
+
+</div>
 <div id="user_profile">
 
     <h1>{{ profile.user.first_name }} {{profile.user.last_name }}</h1>
@@ -41,6 +43,8 @@
                 type="submit">Follow {{ profile.user.username }}</button>
         {% endif %}
     </form>
+
+
 </div>
 
 {% endblock %}

@@ -1,7 +1,7 @@
 from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic import ListView, DetailView
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .forms import PostForm
 from django.shortcuts import render, get_object_or_404
 from django.template import loader
@@ -18,6 +18,7 @@ from .models import Post, Debate, Category, Comment, User, Note
 from .forms import CommentForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.decorators.http import require_POST
+from .forms import NoteForm
 #from .forms import PostForm
 '''class Home(ListView):
     model = Post
@@ -28,6 +29,16 @@ from django.views.decorators.http import require_POST
 def home(request):
     requested_url = request.path
     if request.user.is_authenticated:
+        form = NoteForm(request.POST or None)
+        if request.method == "POST":
+            if form.is_valid():
+                note = form.save(commit=False)
+                note.profile = request.user.profile
+                note.user = request.user
+                note.save()
+                return redirect('MainApp:home')
+
+
         followed_profiles = request.user.profile.follows.all()
         print("FOLLOWING: ",followed_profiles)
         current_user = request.user
@@ -51,7 +62,7 @@ def home(request):
         elif requested_url == "/MainApp/economics/":
             return render(request, 'MainApp/post/economics.html', {'posts': posts})
         else:
-            return render(request, 'MainApp/post/list.html', {'notes': notes})
+            return render(request, 'MainApp/post/list.html', {'notes': notes, "form":form})
     else:
         return render(request, 'MainApp/post/list.html')
 
@@ -106,3 +117,4 @@ class DeleteBlogView(DeleteView):
 def profile_list(request):
     profiles = Profile.objects.exclude(user=request.user)
     return render(request, 'MainApp/post/profile_list.html', {'profiles':profiles})
+
