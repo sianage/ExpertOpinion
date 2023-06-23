@@ -18,17 +18,18 @@
 
 </div>
 
-{% if user.is_authenticated %}
+
+<div id="note_wrapper">
 <div id="note_list">
+{% if user.is_authenticated %}
 {% for note in notes %}
 <div id="note_div">
     note: {{note.body|urlize}}
 </div>
-<br>
 {% endfor %}
-</div>
+
 {% endif %}
-
-
+</div>
+</div>
 {% endif %}
 {% endblock %}

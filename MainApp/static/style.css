@@ -19,25 +19,33 @@ body{
 }
 #home_submit{
     margin: auto;
+    margin-left: 10px;
+    margin-right: 10px;
     position: relative;
     top: 10;
     left: 60;
 }
+#note_wrapper{
+    height: 550px;
+    width:500px;
+    overflow:auto;
+}
 #note_list{
-    box-sizing: border-box;
-    width: 50%;
-    height 200px;
-    border: solid;
     margin:auto;
-    float:center;
+    margin-left: 50px;
+    float:left;
     bottom: 20;
     margin-bottom: 20px;
-    overflow-x: hidden;
-    text-overflow: ellipsis;
-    overflow-y: scroll;
 }
-
 #note_div{
+    border-style: outset;
+    border-color: #d9d9d9;
+    padding: 12px 25px;
+}
+#note_div:hover{
+  transition: .3s;
+  color: #b50202;
+  background-color:#d9d9d9;
 }
 #home_note{
     display:block;
