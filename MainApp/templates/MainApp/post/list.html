@@ -25,6 +25,13 @@
 {% for note in notes %}
 <div id="note_div">
     note: {{note.body|urlize}}
+    <br>
+    (posted {{note.created_at}})
+    <br>
+    {% if request.user.username == note.user.username %}
+        <a href="{% url 'MainApp:delete_note' note.id %}">Delete</a>
+        <a href="{% url 'MainApp:edit_note' note.id %}"> Edit</a>
+    {% endif %}
 </div>
 {% endfor %}
 

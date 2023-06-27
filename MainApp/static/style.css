@@ -27,12 +27,13 @@ body{
 }
 #note_wrapper{
     height: 550px;
-    width:500px;
+    width:50%;
     overflow:auto;
+    margin-left:50px;
 }
 #note_list{
+    width:100%;
     margin:auto;
-    margin-left: 50px;
     float:left;
     bottom: 20;
     margin-bottom: 20px;

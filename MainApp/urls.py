@@ -23,4 +23,6 @@ urlpatterns = [
     path('blog_post/edit/<int:pk>', UpdateBlogView.as_view(), name='update_post'),
     path('blog_post/delete/<int:pk>', DeleteBlogView.as_view(), name='delete_post'),
     path('profile_list/', views.profile_list, name='profile_list'),
+    path('delete_note/<int:pk>', views.delete_note, name='delete_note'),
+    path('edit_note/<int:pk>', views.edit_note, name='edit_note'),
 ]

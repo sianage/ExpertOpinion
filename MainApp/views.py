@@ -118,3 +118,36 @@ def profile_list(request):
     profiles = Profile.objects.exclude(user=request.user)
     return render(request, 'MainApp/post/profile_list.html', {'profiles':profiles})
 
+def delete_note(request, pk):
+    if request.user.is_authenticated:
+        note = get_object_or_404(Note, id=pk)
+        #check if user owns note
+        if request.user.username == note.user.username:
+            note.delete()
+            #messages
+            print("Note Deleted")
+            return redirect('MainApp:home')
+        else:
+            #messages
+            print("not your note")
+            return redirect("MainApp:home")
+
+def edit_note(request, pk):
+    if request.user.is_authenticated:
+        note = get_object_or_404(Note, id=pk)
+        if request.user.username == note.user.username:
+            form = NoteForm(request.POST or None, instance=note)
+            if request.method == "POST":
+                if form.is_valid():
+                    note = form.save(commit=False)
+                    note.profile = request.user.profile
+                    note.user = request.user
+                    note.save()
+                    print("Note edited")
+                    return redirect('MainApp:home')
+            else:
+                #messages
+                print("not your note")
+                return render(request, 'MainApp/note/edit_note.html', {'form':form, 'note':note})
+        else:
+            return redirect('home')
