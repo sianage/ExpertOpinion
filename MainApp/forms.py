@@ -1,11 +1,11 @@
 from django.forms import TextInput, CharField
 
-from .models import Post, Category, User, Note
+from .models import Post, Category, User, Note, Comment
 from .models import Debate
 from django import forms
 from MainApp.models import Profile
 # hard-coded version of selection list of categories (not used)
-# choices = [('economics', 'economics'), ('philosophy', 'philosophy'), ('medicine', 'medicine'), ('politics', 'politics')]
+#choices = [('economics', 'economics'), ('philosophy', 'philosophy'), ('medicine', 'medicine'), ('politics', 'politics')]
 choices = Category.objects.all().values_list('category', 'category')
 choice_list = []
 for item in choices:
@@ -15,6 +15,7 @@ authors = Post.objects.all().values_list('author', 'author')
 author_list = []
 for person in authors:
     author_list.append(person)
+    print('----------------------------', person)
 
 class CommentForm(forms.ModelForm):
     class Meta:
@@ -22,15 +23,26 @@ class CommentForm(forms.ModelForm):
         fields = ['category', 'title', 'description']
 
 class PostForm(forms.ModelForm):
+    '''def __init__(self, user, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['category'].initial = user.profile.field'''
+
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['author'].disabled = True
+        self.fields['category'].disabled = True
+
     class Meta:
         model = Post
-        fields = ('title', 'author', 'category', 'body', 'header_image')
+        fields = ('title', 'category', 'body', 'header_image', 'author')
+        #exclude = ('author', 'slug', 'publish', 'category')
 
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
-            'author': forms.Select(choices=author_list, attrs={'class': 'form-control'}),
             'body': forms.Textarea(attrs={'class': 'form-control'}),
             'category': forms.Select(choices=choice_list, attrs={'class': 'form-control'}),
+            'author': forms.Select(choices=author_list, attrs={'class': 'form-control'}),
         }
 
 class NoteForm(forms.ModelForm):
@@ -44,3 +56,13 @@ class NoteForm(forms.ModelForm):
     class Meta:
         model = Note
         exclude = ("profile","user")
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('commenter_name','body')
+
+        widgets = {
+            'commenter_name':forms.Select(choices=author_list, attrs={'class': 'form-control'}),
+            'body': forms.Textarea(attrs={'class': 'form-control'}),
+        }

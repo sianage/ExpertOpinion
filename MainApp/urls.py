@@ -5,7 +5,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 #from .views import Home, Philosophy_Blog, ArticleDetailView, AddEntryView, EditPostView, DeletePostView
 from .views import post_detail, home, debate_list, debate_detail, philosophy_blog, AddBlogView, UpdateBlogView, \
-    DeleteBlogView
+    DeleteBlogView, AddCommentView
 
 app_name = 'MainApp'
 
@@ -25,4 +25,5 @@ urlpatterns = [
     path('profile_list/', views.profile_list, name='profile_list'),
     path('delete_note/<int:pk>', views.delete_note, name='delete_note'),
     path('edit_note/<int:pk>', views.edit_note, name='edit_note'),
+    path('debate/<int:pk>/comment/', AddCommentView.as_view(), name="comment"),
 ]

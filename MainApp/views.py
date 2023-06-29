@@ -1,3 +1,5 @@
+import self as self
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic import ListView, DetailView
@@ -5,7 +7,7 @@ from django.shortcuts import render, redirect
 from .forms import PostForm
 from django.shortcuts import render, get_object_or_404
 from django.template import loader
-from django.http import HttpResponse
+from django.http import HttpResponse, request
 from django.http import Http404
 from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
@@ -18,7 +20,7 @@ from .models import Post, Debate, Category, Comment, User, Note
 from .forms import CommentForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.decorators.http import require_POST
-from .forms import NoteForm
+from .forms import NoteForm, CommentForm
 #from .forms import PostForm
 '''class Home(ListView):
     model = Post
@@ -96,13 +98,53 @@ class philosophy_blog(ListView):
     model = Post
     template_name = 'MainApp/post/philosophy_blog.html'
 
-class AddBlogView(CreateView):
+class AddBlogView(LoginRequiredMixin, CreateView):
     model = Post
-    #form_class = PostForm
+    form_class = PostForm
     template_name = 'MainApp/post/add_post.html'
-    fields = '__all__'
+    #fields = '__all__'
     #success_url = reverse_lazy('MainApp:philosophy_blog_list')
     success_url = reverse_lazy('MainApp:philosophy_blog_list')
+
+    def get_initial(self):
+        return {'author':self.request.user, 'category':self.request.user.profile.field}
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('philosophy_blog_list')
+        return render(request, self.template_name, {'form': form})
+
+    '''def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.instance.category = self.request.user.profile.field
+        return super().form_valid(form)
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['category'] = self.request.user.profile.field
+        initial['author'] = self.request.user.username
+        return initial
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.instance.category = self.request.user.profile.field
+        return super().form_valid(form)'''
+
+class AddCommentView(CreateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'MainApp/debate/add_comment.html'
+    #fields = '__all__'
+    success_url = reverse_lazy('MainApp:home')
+
+    def form_valid(self, form):
+        form.instance.debate_id = self.kwargs['pk']
+        return super().form_valid(form)
 
 class UpdateBlogView(UpdateView):
     model = Post

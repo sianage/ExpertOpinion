@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.context_processors import request
 from django.views import generic
@@ -7,8 +8,8 @@ from django.urls import reverse_lazy
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView, CreateView
 
-
-from MainApp.models import Profile, Note
+from MainApp.forms import NoteForm
+from MainApp.models import Profile, Note, Post
 from django import forms
 from MainApp.models import Profile
 from .forms import SignUpForm, ProfilePageForm
@@ -118,9 +119,11 @@ def ProfileView(request, pk):
     }'''
 
 
-
     if request.user.is_authenticated:
-        profile = profile = get_object_or_404(Profile, id=pk)
+        form = NoteForm(request.POST or None)
+        profile = Profile.objects.get(id=pk)
+        followed_profiles = request.user.profile.follows.all()
+        note = Note.objects.filter(profile__in=followed_profiles)
         if request.method == "POST":
             current_user_profile = request.user.profile
             action = request.POST['follow']
@@ -130,6 +133,45 @@ def ProfileView(request, pk):
             elif action == 'follow':
                 current_user_profile.follows.add(profile)
             current_user_profile.save()
-        return render(request, 'registration/user_profile.html', {'profile':profile})
+        return render(request, 'registration/user_profile.html', {'profile':profile, 'note':note, 'form':form})
     else:
         return redirect('MainApp:home')
+
+    requested_url = request.path
+    if request.user.is_authenticated:
+        form = NoteForm(request.POST or None)
+        if request.method == "POST":
+            if form.is_valid():
+                note = form.save(commit=False)
+                note.profile = request.user.profile
+                note.user = request.user
+                note.save()
+                return redirect('MainApp:home')
+
+
+        followed_profiles = request.user.profile.follows.all()
+        print("FOLLOWING: ",followed_profiles)
+        current_user = request.user
+        print("URL is......",requested_url)
+        home = Post.published.all()
+        notes = Note.objects.filter(profile__in=followed_profiles)
+        #notes = Note.objects.all().order_by("-created_at")
+        paginator = Paginator(home,2)
+        page_number = request.GET.get('page', 1)
+        #notes = Note.objects.all()
+        try:
+            posts = paginator.page(page_number)
+        except PageNotAnInteger:
+            # if page_number not an int, display first page
+            posts = paginator.page(1)
+        except EmptyPage:
+            #If page_number out of range, display last page of results
+            posts = paginator.page(paginator.num_pages)
+        if requested_url == "/MainApp/philosophy/":
+            return render(request, 'MainApp/post/philosophy_blog.html', {'posts': posts})
+        elif requested_url == "/MainApp/economics/":
+            return render(request, 'MainApp/post/economics.html', {'posts': posts})
+        else:
+            return render(request, 'MainApp/post/list.html', {'notes': notes, "form":form})
+    else:
+        return render(request, 'MainApp/post/list.html')

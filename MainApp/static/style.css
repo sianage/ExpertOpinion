@@ -4,6 +4,9 @@ body{
   background: white;
   font-family: arial;
 }
+.form-control{
+    text-align:left;
+}
 #post_body{
     text-align: left;
     margin: auto;
@@ -24,6 +27,33 @@ body{
     position: relative;
     top: 10;
     left: 60;
+}
+#edit_profile_media{
+    border: solid;
+    width:250px;
+    height:250px;
+    margin:auto;
+    float:center;
+}
+#edit_profile_fields{
+    width:400px;
+}
+#edit_settings_fields{
+    width:500px;
+}
+#edit_settings{
+    border:solid;
+    width:600px;
+    height:700px;
+    margin:auto;
+    float:center;
+}
+#edit_div{
+    margin:auto;
+    float:center;
+    width:500px;
+    height:700px;
+    border:solid;
 }
 #note_wrapper{
     height: 550px;
@@ -203,7 +233,7 @@ h3{
     text-align: center;
 }
 ul {
-  background: black;
+  background: white;
   text-align: center;
   padding: 5px;
 }
