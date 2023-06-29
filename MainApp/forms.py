@@ -15,7 +15,6 @@ authors = Post.objects.all().values_list('author', 'author')
 author_list = []
 for person in authors:
     author_list.append(person)
-    print('----------------------------', person)
 
 class CommentForm(forms.ModelForm):
     class Meta:
@@ -26,23 +25,17 @@ class PostForm(forms.ModelForm):
     '''def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['category'].initial = user.profile.field'''
-
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['author'].disabled = True
-        self.fields['category'].disabled = True
-
     class Meta:
         model = Post
-        fields = ('title', 'category', 'body', 'header_image', 'author')
+        fields = ('title', 'author', 'category', 'body', 'header_image', 'status')
         #exclude = ('author', 'slug', 'publish', 'category')
 
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'author': forms.TextInput(attrs={'class': 'form-control', 'placeholder':'username', 'id':'user', 'type':'hidden'}),
+            #'author': forms.Select(choices=author_list, attrs={'class': 'form-control'}),
             'body': forms.Textarea(attrs={'class': 'form-control'}),
             'category': forms.Select(choices=choice_list, attrs={'class': 'form-control'}),
-            'author': forms.Select(choices=author_list, attrs={'class': 'form-control'}),
         }
 
 class NoteForm(forms.ModelForm):
