@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic import ListView, DetailView
 from django.shortcuts import render, redirect
-from .forms import PostForm
+from .forms import PostForm, DebateForm
 from django.shortcuts import render, get_object_or_404
 from django.template import loader
 from django.http import HttpResponse, request
@@ -106,7 +106,12 @@ class AddBlogView(LoginRequiredMixin, CreateView):
     #success_url = reverse_lazy('MainApp:philosophy_blog_list')
     success_url = reverse_lazy('MainApp:philosophy_blog_list')
 
-
+class AddDebateView(LoginRequiredMixin, CreateView):
+    model = Debate
+    form_class = DebateForm
+    template_name = 'MainApp/debate/add_debate.html'
+    #fields = '__all__'
+    success_url = reverse_lazy('MainApp:debate_list')
 
 class AddCommentView(CreateView):
     model = Comment
