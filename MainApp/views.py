@@ -13,7 +13,7 @@ from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import PasswordChangeView
 # Create your views here.
-from MainApp.models import Post, Category, Profile
+from MainApp.models import Post, Category, Profile, Comment
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, CreateView
 from .models import Post, Debate, Category, Comment, User, Note
@@ -40,17 +40,20 @@ def home(request):
                 note.save()
                 return redirect('MainApp:home')
 
-
-        followed_profiles = request.user.profile.follows.all()
-        print("FOLLOWING: ",followed_profiles)
-        current_user = request.user
-        print("URL is......",requested_url)
-        home = Post.published.all()
-        notes = Note.objects.filter(profile__in=followed_profiles)
-        #notes = Note.objects.all().order_by("-created_at")
-        paginator = Paginator(home,2)
-        page_number = request.GET.get('page', 1)
-        #notes = Note.objects.all()
+        try:
+            profile = request.user.profile
+            followed_profiles = request.user.profile.follows.all()
+            print("FOLLOWING: ",followed_profiles)
+            current_user = request.user
+            print("URL is......",requested_url)
+            home = Post.published.all()
+            notes = Note.objects.filter(profile__in=followed_profiles)
+            #notes = Note.objects.all().order_by("-created_at")
+            paginator = Paginator(home,2)
+            page_number = request.GET.get('page', 1)
+            #notes = Note.objects.all()
+        except:
+            return redirect("create_profile_page")
         try:
             posts = paginator.page(page_number)
         except PageNotAnInteger:
@@ -75,6 +78,7 @@ class post_detail(DetailView, ):
 
 @require_POST
 def debate_post(request, debate_id):
+    print("UHHHHHHHHHHHUHHHHH!!!!!!!!!")
     post = get_object_or_404(Debate, id=debate_id)
     comment = None
     #???????????????????????????????
@@ -113,7 +117,49 @@ class AddDebateView(LoginRequiredMixin, CreateView):
     #fields = '__all__'
     success_url = reverse_lazy('MainApp:debate_list')
 
-class AddCommentView(CreateView):
+def AddCommentView(request, pk):
+    debate = get_object_or_404(Debate, id=pk)
+    comment = get_object_or_404(Debate, id=pk)
+    user = request.user
+    opponent = debate.opponent
+    comments = debate.comments.all()
+    # Check if the user is the author or opponent
+    if user != debate.author and user != opponent:
+        return redirect('MainApp:home')
+
+    if comments.exists():
+        last_comment = comments.last()
+        last_commenter_name = last_comment.commenter_name
+        print("Opponent: ", last_commenter_name)
+        if last_commenter_name == request.user:
+            return redirect('MainApp:home')
+        else:
+            form = CommentForm(request.POST or None)
+            if request.method == 'POST' and form.is_valid():
+                comment = form.save(commit=False)
+                comment.debate_id = pk
+                comment.save()
+                return redirect('MainApp:home')
+
+    return render(request, 'MainApp/debate/add_comment.html', {'form': form, 'debate': debate})
+    '''form = CommentForm(request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        comment = form.save(commit=False)
+        comment.debate_id = pk
+
+        if authors_turn:
+            comment.commenter_name = debate.author
+        else:
+            comment.commenter_name = debate.opponent
+        comment.save()
+        return redirect('MainApp:home')
+
+    return render(request, 'MainApp/debate/add_comment.html', {'form': form, 'debate': debate})'''
+
+
+
+
+'''class AddCommentView(CreateView):
     model = Comment
     form_class = CommentForm
     template_name = 'MainApp/debate/add_comment.html'
@@ -122,7 +168,45 @@ class AddCommentView(CreateView):
 
     def form_valid(self, form):
         form.instance.debate_id = self.kwargs['pk']
+        print("form.instance.debate_id:",form.instance.debate_id)
         return super().form_valid(form)
+
+    def get(self, request, pk, debate_id):
+        debate = get_object_or_404(Debate, id=debate_id)
+        user = request.user
+        opponent = debate.opponent
+
+        # Check if the user is the author or opponent
+        if user == debate.author or user == opponent:
+            error_message = None
+        else:
+            return redirect('home')  # Or any other appropriate redirection
+
+        return render(request, 'MainApp/debate/add_comment.html', {'debate': debate, 'error_message': error_message})
+
+    def post(self, request, debate_id):
+        debate = get_object_or_404(Debate, id=debate_id)
+        user = request.user
+        opponent = debate.opponent
+
+        # Check if the user is the author or opponent
+        if user == debate.author or user == opponent:
+            content = request.POST['content']
+
+            # Check if it's the user's turn to comment
+            last_comment = debate.comments.last()
+            if not last_comment or last_comment.user == opponent:
+                # Create a new comment
+                comment = Comment(debate=debate, user=user, content=content)
+                comment.save()
+                return redirect('debate_detail', debate_id=debate_id)
+            else:
+                error_message = "It's the opponent's turn to comment."
+        else:
+            return redirect('home')  # Or any other appropriate redirection
+
+        return render(request, 'debate_comment.html', {'debate': debate, 'error_message': error_message})'''
+
 
 class UpdateBlogView(UpdateView):
     model = Post
