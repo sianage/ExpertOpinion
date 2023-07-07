@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group, User
+
+from poll.models import Choice, Poll
 from .models import Post, Debate, Category, Comment, Profile, Note
 
 admin.site.register(Post)
@@ -8,6 +10,8 @@ admin.site.register(Category)
 admin.site.register(Comment)
 admin.site.unregister(Group)
 admin.site.register(Note)
+admin.site.register(Poll)
+admin.site.register(Choice)
 
 #add profile info in with User
 class ProfileInline(admin.StackedInline):

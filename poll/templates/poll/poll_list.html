@@ -1,0 +1,10 @@
+{% extends "MainApp/base.html" %}
+{% block content %}
+<h1>Polls</h1>
+<div>
+    {% for poll in poll_list %}
+            <strong><h2><a href="{% url 'poll_details' poll.pk %}">{{ poll.title }}</a></h2></strong>
+            </br>
+    {% endfor %}
+</div>
+{% endblock %}

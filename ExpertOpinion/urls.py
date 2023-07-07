@@ -25,4 +25,5 @@ urlpatterns = [
     #authentication urls
     path('Members/', include('django.contrib.auth.urls')),
     path('Members', include('Members.urls')),
+    path('poll', include('poll.urls')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'MainApp',
     'Members',
     'ckeditor',
+    'poll',
 ]
 
 MIDDLEWARE = [
