@@ -1,9 +1,12 @@
 from django.contrib.auth.models import User
 from django.db import models
+from MainApp.models import Category
 
 class Poll(models.Model):
     title = models.CharField(max_length=255)
     published = models.DateTimeField('Date Published')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, related_name="categories")
+
 
 class Choice(models.Model):
     poll = models.ForeignKey(Poll, null=True, on_delete=models.CASCADE)

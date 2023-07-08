@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView
 from MainApp.models import Debate
-from .models import Poll, Choice
+from .models import Poll, Choice, Vote
 # Create your views here.
 from django.urls import reverse_lazy, reverse
 
@@ -20,26 +20,26 @@ def results(request, poll_id):
     poll = get_object_or_404(Poll, pk=poll_id)
     return render(request, 'poll/results.html', {'poll': poll})
 
+
+from django.contrib.auth.decorators import login_required
+
+
+@login_required
 def vote(request, poll_id):
     poll = get_object_or_404(Poll, pk=poll_id)
+    user = request.user
+    if Vote.objects.filter(user=user, choice__poll=poll).exists():
+        return render(request, 'poll/poll_detail.html', {'poll': poll, 'error_message': "You have already voted."})
+
     try:
         selected_choice_id = request.POST.get('choice')
-        print("selected_choice_id: ----------------------->",selected_choice_id)
         if selected_choice_id is None:
-            print("selected choice is None? ----------------------->", selected_choice_id)
             raise KeyError
         selected_choice = poll.choice_set.get(pk=selected_choice_id)
-    except KeyError:
-        print("-----------------------------------> except KeyError")
-        # Message for no choice selected
-        return render(request, 'poll/poll_detail.html', {'poll': poll, 'error_message': "No choice selected"})
-    except Choice.DoesNotExist as e:
-        print("-----------------------------------------> choice does not exist")
-        print("Choice.DoesNotExist Exception:", e)
-        # Handle the case when the choice does not exist
+    except (KeyError, Choice.DoesNotExist):
         return render(request, 'poll/poll_detail.html', {'poll': poll, 'error_message': "Invalid choice"})
     else:
-        print("-------------------------------------------> VOTED!")
         selected_choice.votes += 1
         selected_choice.save()
+        Vote.objects.create(user=user, choice=selected_choice)
         return HttpResponseRedirect(reverse('results', args=(poll.id,)))
