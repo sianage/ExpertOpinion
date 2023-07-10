@@ -6,6 +6,11 @@
 
 </div>
 <div id="user_profile">
+    <div id="profile_pic">
+        {% if profile.profile_picture %}
+            <img src="{{ profile.profile_picture.url }}">
+        {% endif %}
+    </div>
 
     <h1>{{ profile.user.first_name }} {{profile.user.last_name }}</h1>
     <div id="academic_field">
@@ -47,26 +52,4 @@
 
 
 </div>
-{% if profile %}
-<div id="note_wrapper">
-<div id="note_list">
-{% if user.is_authenticated %}
-    {% if notes %}
-        {% for note in notes %}
-        <div id="note_div">
-            note: {{note.body|urlize}}
-            <br>
-            (posted {{note.created_at}})
-            <br>
-            {% if request.user.username == note.user.username %}
-                <a href="{% url 'MainApp:delete_note' note.id %}">Delete</a>
-                <a href="{% url 'MainApp:edit_note' note.id %}"> Edit</a>
-            {% endif %}
-        </div>
-        {% endfor %}
-    {% endif %}
-{% endif %}
-</div>
-</div>
-{% endif %}
 {% endblock %}

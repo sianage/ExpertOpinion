@@ -47,7 +47,7 @@ def home(request):
             current_user = request.user
             print("URL is......",requested_url)
             home = Post.published.all()
-            notes = Note.objects.filter(profile__in=followed_profiles)
+            notes = Note.objects.filter(profile__in=followed_profiles).order_by("-created_at")
             #notes = Note.objects.all().order_by("-created_at")
             paginator = Paginator(home,2)
             page_number = request.GET.get('page', 1)
@@ -255,3 +255,4 @@ def edit_note(request, pk):
                 return render(request, 'MainApp/note/edit_note.html', {'form':form, 'note':note})
         else:
             return redirect('home')
+

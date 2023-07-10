@@ -26,5 +26,5 @@ urlpatterns = [
     path('delete_note/<int:pk>', views.delete_note, name='delete_note'),
     path('edit_note/<int:pk>', views.edit_note, name='edit_note'),
     path('debate/<int:pk>/comment/', views.AddCommentView, name="comment"),
-    path('start_debate/', AddDebateView.as_view(), name="start_debate")
+    path('start_debate/', AddDebateView.as_view(), name="start_debate"),
 ]

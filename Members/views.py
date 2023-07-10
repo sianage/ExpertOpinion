@@ -17,7 +17,7 @@ from .forms import SignUpForm, ProfilePageForm
 class EditProfilePageView(generic.UpdateView):
     model = Profile
     template_name = 'registration/edit_profile_page.html'
-    fields = ['bio', 'github_url', 'linkedin_url']
+    fields = ['bio', 'github_url', 'linkedin_url', 'academic_field']
     success_url = reverse_lazy('MainApp:home')
 
 

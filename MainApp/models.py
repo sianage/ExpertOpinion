@@ -106,7 +106,7 @@ class Profile(models.Model):
                                      related_name="followed_by",
                                      symmetrical=False,
                                      blank=True)
-    field = models.CharField(max_length=30, choices=fields, default="No Field Selected")
+    academic_field = models.CharField(max_length=30, choices=fields, default="No Field Selected")
     bio = models.TextField(default='')
     profile_picture = models.ImageField(null=True, blank=True, upload_to="images/profile/")
     github_url = models.CharField(max_length=255, null=True, blank=True)

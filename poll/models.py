@@ -8,6 +8,7 @@ class Poll(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, related_name="categories")
 
 
+
 class Choice(models.Model):
     poll = models.ForeignKey(Poll, null=True, on_delete=models.CASCADE)
     choice = models.CharField(max_length=255)

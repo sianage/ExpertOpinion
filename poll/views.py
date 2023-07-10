@@ -5,7 +5,7 @@ from MainApp.models import Debate
 from .models import Poll, Choice, Vote
 # Create your views here.
 from django.urls import reverse_lazy, reverse
-
+from django.contrib.auth.decorators import login_required
 
 class poll_list(ListView):
     model = Poll
@@ -21,8 +21,11 @@ def results(request, poll_id):
     return render(request, 'poll/results.html', {'poll': poll})
 
 
-from django.contrib.auth.decorators import login_required
-
+def CreatePollView(LoginRequiredMixin, CreateView):
+    model = Poll
+    form_class = PollForm
+    template_name = 'poll/add_poll.html'
+    success_url = reverse_lazy('poll_list')
 
 @login_required
 def vote(request, poll_id):

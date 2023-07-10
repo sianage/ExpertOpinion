@@ -1,6 +1,5 @@
 {% extends "MainApp/base.html" %}
 {% block content %}
-<h1>homepage</h1>
 <div id="home_note">
 {% if form %}
     <p>
@@ -23,16 +22,30 @@
 <div id="note_list">
 {% if user.is_authenticated %}
 {% for note in notes %}
-<div id="note_div">
-    note: {{note.body|urlize}}
-    <br>
-    (posted {{note.created_at}})
-    <br>
-    {% if request.user.username == note.user.username %}
-        <a href="{% url 'MainApp:delete_note' note.id %}">Delete</a>
-        <a href="{% url 'MainApp:edit_note' note.id %}"> Edit</a>
-    {% endif %}
-</div>
+
+
+
+    <div id="note_div">
+
+        <div id="note_pic">
+            {% if note.user.profile.profile_picture %}
+                <img src="{{ note.user.profile.profile_picture.url }}">
+            {% endif %}
+        </div>
+
+        <div id="note_text">
+            <strong>{{ note.user.first_name|capfirst }} {{ note.user.last_name|capfirst }}: {{note.body|ljust:10|striptags|safe|urlize}}</strong>
+            <br>
+            (posted {{note.created_at}})
+            <br>
+            {% if request.user.username == note.user.username %}
+                <a href="{% url 'MainApp:delete_note' note.id %}">Delete</a>
+                <a href="{% url 'MainApp:edit_note' note.id %}"> Edit</a>
+            {% endif %}
+        </div>
+    </div>
+
+
 {% endfor %}
 
 {% endif %}
