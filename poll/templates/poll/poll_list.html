@@ -4,7 +4,7 @@
 <br>
 <div>
     {% for poll in poll_list %}
-        {% if request.user.profile.field|lower == poll.category|lower %}
+        {% if request.user.profile.academic_field|lower == poll.category|lower %}
             <strong><h2><a href="{% url 'poll_details' poll.pk %}">{{ poll.title }}</a></h2></strong>
             </br>
         {% else %}

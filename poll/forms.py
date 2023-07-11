@@ -1,17 +1,18 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
 from django import forms
-from .models import Poll
+from django.forms import formset_factory
+from .models import Poll, Choice
+from MainApp.models import Category
 
-class DebateForm(forms.ModelForm):
+class PollForm(forms.ModelForm):
     class Meta:
         model = Poll
-        fields = ('category', 'author', 'opponent', 'description', 'title')
+        fields = ['title', 'category']
 
-        widgets = {
-            'category':forms.Select(choices=choice_list, attrs={'class': 'form-control'}),
-            'author':forms.Select(choices=author_list, attrs={'class': 'form-control'}),
-            'opponent':forms.Select(choices=author_list, attrs={'class': 'form-control'}),
-            'title':forms.TextInput(attrs={'class': 'form-control'}),
-            'description':forms.Textarea(attrs={'class': 'form-control'}),
-        }
+class ChoiceForm(forms.ModelForm):
+    class Meta:
+        model = Choice
+        fields = ['choice']
+
+ChoiceFormSet = formset_factory(ChoiceForm, extra=1, min_num=1, validate_min=True)
